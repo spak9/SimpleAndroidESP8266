@@ -5,11 +5,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".InterfaceActivity">
+    
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:constraint_referenced_ids="leds_interface"/>
+
 
     <TextView
+        android:id="@+id/leds_interface"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="House Interface" />
+        android:text="LEDs Interface" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#ff00ff"
+        app:layout_constraintTop_toBottomOf="@id/flow1"/>
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintTop_toBottomOf="@id/flow1"
+        app:constraint_referenced_ids="temp_interface"/>
+
+    <TextView
+        android:id="@+id/temp_interface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DHT11 Interface" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
