@@ -24,15 +24,14 @@
         android:id="@+id/lightbulb"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/lightbulb"
-        app:tint="@color/yellow" />
+        android:src="@drawable/lightbulb" />
 
 
     <TextView
         android:id="@+id/leds_interface"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LEDs Interface"
+        android:text="LEDs"
         tools:layout_editor_absoluteX="79dp"
         tools:layout_editor_absoluteY="189dp" />
 
