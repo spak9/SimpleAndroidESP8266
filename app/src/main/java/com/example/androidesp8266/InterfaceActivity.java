@@ -11,6 +11,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+/*
+    README will contain the basic information regarding decisions for various things
+ */
+
 public class InterfaceActivity extends AppCompatActivity {
 
     // the lightbulb image
