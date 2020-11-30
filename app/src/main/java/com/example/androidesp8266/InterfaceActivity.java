@@ -12,7 +12,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 /*
-    README will contain the basic information regarding decisions for various things
+    This Interface class will be split into two main interfaces:
+    - 1. LEDs
+    - 2. Temperature
+    They will both send HTTP requests to the ESP8266 server and
+    wait for with temperature data response (JSON) or just OK response
  */
 
 public class InterfaceActivity extends AppCompatActivity {
@@ -53,5 +57,13 @@ public class InterfaceActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    /*
+        We need a method for handling LEDs HTTP POST/responses
+     */
+    public static int sendRequest(boolean ON) {
+
+        return 1;
     }
 }
