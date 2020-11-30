@@ -1,5 +1,6 @@
 package com.example.androidesp8266;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
@@ -10,6 +11,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 
 /*
     This Interface class will be split into two main interfaces:
@@ -23,6 +27,11 @@ public class InterfaceActivity extends AppCompatActivity {
 
     // the lightbulb image
     ImageView lightbulb;
+
+    // http://192.168.86.22/
+
+    // Our RequestQueue object for sending HTTP request
+    RequestQueue queue = Volley.newRequestQueue(this);
 
     boolean on = false;
 
@@ -60,7 +69,8 @@ public class InterfaceActivity extends AppCompatActivity {
     }
 
     /*
-        We need a method for handling LEDs HTTP POST/responses
+        We need a method for handling LEDs HTTP POST/responses.
+        For our HTTP request/responses, we'll be using Android's Volley library
      */
     public static int sendRequest(boolean ON) {
 
