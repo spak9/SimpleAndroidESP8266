@@ -1,5 +1,16 @@
 # Simple Android Application Using ESP8266
 
+## Work Flow
+The general work flow is just always to checkout a new branch and work on that 
+until it's merged with master. 
+That is, checkout, work on branch, commit, push, and finally pull request when all done.
+
+## General Interface
+
+The general interface will be split into 2: 
+- The LED interface 
+- The DHT11 (temperature & humiditity) interface 
+
 ## LED Interface
 
 The following will detail some decisions for how the
