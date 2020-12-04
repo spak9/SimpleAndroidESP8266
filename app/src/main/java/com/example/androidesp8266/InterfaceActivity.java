@@ -24,8 +24,8 @@ import com.android.volley.toolbox.Volley;
     This Interface class will be split into two main interfaces:
     - 1. LEDs
     - 2. Temperature
-    They will both send HTTP requests to the ESP8266 server and
-    wait for with temperature data response (JSON) or just OK response
+    They will both send HTTP requests (through Volley library) to the ESP8266 server and
+    wait for temperature data response (JSON) or just OK response
  */
 
 public class InterfaceActivity extends AppCompatActivity {
@@ -34,6 +34,7 @@ public class InterfaceActivity extends AppCompatActivity {
     ImageView lightbulb;
     RequestQueue queue;
 
+    // a static URL given to the esp8266
     String BaseUrl = "http://192.168.86.22/";
 
     boolean on = false;
@@ -53,7 +54,6 @@ public class InterfaceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // if ON, then turn OFF
-                // setColorFilter() api is quite complicated online, but will ultimately change color
                 if (on) {
                     on = false;
                     int color = ContextCompat.getColor(InterfaceActivity.this, R.color.colorPrimaryDark);
@@ -79,18 +79,18 @@ public class InterfaceActivity extends AppCompatActivity {
     }
 
     /*
-        We need a method for handling LEDs HTTP POST/responses.
-        For our HTTP request/responses, we'll be using Android's Volley library
+        This method will take the state of the LEDs and make a HTTP POST
+        request, requesting to do `!ON`
      */
     public int sendRequest(boolean ON) {
         // if led is ON, then need to turn it off --> send to ledOFF
         String url;
         if (ON) {
-            url = BaseUrl + "ledOFF";
+            url = BaseUrl + "turn_leds_off";
         }
         // else, led if OFF, then need to turn it on --> send to ledON
         else {
-            url = BaseUrl + "ledON";
+            url = BaseUrl + "turn_leds_on";
         }
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
