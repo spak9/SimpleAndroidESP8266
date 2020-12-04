@@ -37,7 +37,7 @@ public class InterfaceActivity extends AppCompatActivity {
     // a static URL given to the esp8266
     String BaseUrl = "http://192.168.86.22/";
 
-    boolean on = false;
+    boolean on = MainActivity.on;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +46,8 @@ public class InterfaceActivity extends AppCompatActivity {
 
         // Our RequestQueue object for sending HTTP request
         queue = Volley.newRequestQueue(this);
-
         lightbulb = (ImageView)findViewById(R.id.lightbulb);
+
 
         // Only 2 states for the lightbulb: on (1) or off (0)
         lightbulb.setOnClickListener(new View.OnClickListener() {
@@ -55,27 +55,48 @@ public class InterfaceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // if ON, then turn OFF
                 if (on) {
-                    on = false;
                     int color = ContextCompat.getColor(InterfaceActivity.this, R.color.colorPrimaryDark);
                     //ImageViewCompat.setImageTintList(lightbulb, ColorStateList.valueOf(color));
                     lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-                    Toast.makeText(InterfaceActivity.this, "on to off", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(InterfaceActivity.this, "on to off", Toast.LENGTH_SHORT).show();
                     // send our request
                     sendRequest(on);
+
+                    // change leds state
+                    on = false;
                 }
                 // if OFF, then turn ON
                 else {
-                    on = true;
+
                     int color = ContextCompat.getColor(InterfaceActivity.this, R.color.yellow);
                     lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-                    Toast.makeText(InterfaceActivity.this, "off to on", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(InterfaceActivity.this, "off to on", Toast.LENGTH_SHORT).show();
                     // send our request
                     sendRequest(on);
+
+                    // change leds state
+                    on = true;
                 }
             }
         });
 
+    }
 
+    /*
+    onCreate() used for changing the led image color
+     */
+    @Override
+    protected void onResume() {
+        // on creating the Activity, automatically put the
+        // lightbulb.png image the needed based on the `on` boolean
+        super.onResume();
+        if (on) {
+            int color = ContextCompat.getColor(InterfaceActivity.this, R.color.yellow);
+            lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        } else {
+            int color = ContextCompat.getColor(InterfaceActivity.this, R.color.colorPrimaryDark);
+            lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
     /*
@@ -93,6 +114,7 @@ public class InterfaceActivity extends AppCompatActivity {
             url = BaseUrl + "turn_leds_on";
         }
 
+        // We'll know the request went through by checking the response (Toast)
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
