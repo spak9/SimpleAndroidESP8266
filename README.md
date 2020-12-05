@@ -23,4 +23,6 @@ LED interface will work
     on, therefore LED interface state must reflect that)
     Therefore, one of the ways to do that is through 
     doing a small request on "StartUp" of the interface,
-    that is, click on the `houseInterface` button.
+    that is, click on the `houseInterface` button. We synchronize 
+    this by sending a small HTTP request right when `MainActivity`
+    goes through `onResume()` getting the status of the LEDs.
