@@ -24,8 +24,8 @@ import com.android.volley.toolbox.Volley;
     This Interface class will be split into two main interfaces:
     - 1. LEDs
     - 2. Temperature
-    They will both send HTTP requests to the ESP8266 server and
-    wait for with temperature data response (JSON) or just OK response
+    They will both send HTTP requests (through Volley library) to the ESP8266 server and
+    wait for temperature data response (JSON) or just OK response
  */
 
 public class InterfaceActivity extends AppCompatActivity {
@@ -34,9 +34,10 @@ public class InterfaceActivity extends AppCompatActivity {
     ImageView lightbulb;
     RequestQueue queue;
 
+    // a static URL given to the esp8266
     String BaseUrl = "http://192.168.86.22/";
 
-    boolean on = false;
+    boolean on = MainActivity.on;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,54 +46,75 @@ public class InterfaceActivity extends AppCompatActivity {
 
         // Our RequestQueue object for sending HTTP request
         queue = Volley.newRequestQueue(this);
-
         lightbulb = (ImageView)findViewById(R.id.lightbulb);
+
 
         // Only 2 states for the lightbulb: on (1) or off (0)
         lightbulb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // if ON, then turn OFF
-                // setColorFilter() api is quite complicated online, but will ultimately change color
                 if (on) {
-                    on = false;
                     int color = ContextCompat.getColor(InterfaceActivity.this, R.color.colorPrimaryDark);
                     //ImageViewCompat.setImageTintList(lightbulb, ColorStateList.valueOf(color));
                     lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-                    Toast.makeText(InterfaceActivity.this, "on to off", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(InterfaceActivity.this, "on to off", Toast.LENGTH_SHORT).show();
                     // send our request
                     sendRequest(on);
+
+                    // change leds state
+                    on = false;
                 }
                 // if OFF, then turn ON
                 else {
-                    on = true;
+
                     int color = ContextCompat.getColor(InterfaceActivity.this, R.color.yellow);
                     lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-                    Toast.makeText(InterfaceActivity.this, "off to on", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(InterfaceActivity.this, "off to on", Toast.LENGTH_SHORT).show();
                     // send our request
                     sendRequest(on);
+
+                    // change leds state
+                    on = true;
                 }
             }
         });
 
-
     }
 
     /*
-        We need a method for handling LEDs HTTP POST/responses.
-        For our HTTP request/responses, we'll be using Android's Volley library
+    onCreate() used for changing the led image color
+     */
+    @Override
+    protected void onResume() {
+        // on creating the Activity, automatically put the
+        // lightbulb.png image the needed based on the `on` boolean
+        super.onResume();
+        if (on) {
+            int color = ContextCompat.getColor(InterfaceActivity.this, R.color.yellow);
+            lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        } else {
+            int color = ContextCompat.getColor(InterfaceActivity.this, R.color.colorPrimaryDark);
+            lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
+    }
+
+    /*
+        This method will take the state of the LEDs and make a HTTP POST
+        request, requesting to do `!ON`
      */
     public int sendRequest(boolean ON) {
         // if led is ON, then need to turn it off --> send to ledOFF
         String url;
         if (ON) {
-            url = BaseUrl + "ledOFF";
+            url = BaseUrl + "turn_leds_off";
         }
         // else, led if OFF, then need to turn it on --> send to ledON
         else {
-            url = BaseUrl + "ledON";
+            url = BaseUrl + "turn_leds_on";
         }
 
+        // We'll know the request went through by checking the response (Toast)
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
