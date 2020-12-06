@@ -31,9 +31,8 @@
         android:id="@+id/leds_interface"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LEDs"
-        tools:layout_editor_absoluteX="79dp"
-        tools:layout_editor_absoluteY="189dp" />
+        android:textSize="20dp"
+        android:text="LEDs" />
 
     <View
         android:layout_width="match_parent"
@@ -52,6 +51,7 @@
         android:id="@+id/temp_interface"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="20dp" 
         android:text="DHT11 Interface" />
 
 
