@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -32,6 +33,9 @@ public class InterfaceActivity extends AppCompatActivity {
 
     // the lightbulb image
     ImageView lightbulb;
+    ImageView thermometer;
+    TextView leds_text;
+    TextView thermometer_text;
     RequestQueue queue;
 
     // a static URL given to the esp8266
@@ -47,6 +51,9 @@ public class InterfaceActivity extends AppCompatActivity {
         // Our RequestQueue object for sending HTTP request
         queue = Volley.newRequestQueue(this);
         lightbulb = (ImageView)findViewById(R.id.lightbulb);
+        leds_text = (TextView)findViewById(R.id.leds_interface);
+        thermometer_text = (TextView)findViewById(R.id.temp_interface);
+        thermometer = (ImageView)findViewById(R.id.thermometer);
 
 
         // Only 2 states for the lightbulb: on (1) or off (0)
@@ -64,6 +71,7 @@ public class InterfaceActivity extends AppCompatActivity {
 
                     // change leds state
                     on = false;
+                    setLEDsText(on);
                 }
                 // if OFF, then turn ON
                 else {
@@ -76,10 +84,35 @@ public class InterfaceActivity extends AppCompatActivity {
 
                     // change leds state
                     on = true;
+                    setLEDsText(on);
                 }
             }
         });
 
+        /*
+        The 2nd listener: the thermometer
+         */
+        thermometer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               String url = BaseUrl + "get_data";
+                // We'll know the request went through by checking the response (Toast)
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(InterfaceActivity.this, response.toString(), Toast.LENGTH_LONG).show();
+                        thermometer_text.setText("Current Temperature: " + response + "\u2109");
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("error",error.toString());
+                    }
+                });
+
+                queue.add(stringRequest);
+            }
+        });
     }
 
     /*
@@ -93,9 +126,11 @@ public class InterfaceActivity extends AppCompatActivity {
         if (on) {
             int color = ContextCompat.getColor(InterfaceActivity.this, R.color.yellow);
             lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            setLEDsText(on);
         } else {
             int color = ContextCompat.getColor(InterfaceActivity.this, R.color.colorPrimaryDark);
             lightbulb.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            setLEDsText(on);
         }
     }
 
@@ -129,5 +164,17 @@ public class InterfaceActivity extends AppCompatActivity {
 
         queue.add(stringRequest);
         return 1;
+    }
+
+    /*
+    Will set the LEDs text either on or off based on it's state
+     */
+    public void setLEDsText(boolean ON) {
+        if (ON) {
+            leds_text.setText("LEDs are ON");
+        }
+        else {
+            leds_text.setText("LEDs are OFF");
+        }
     }
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AndroidESP8266</string>
+    <string name="dht11_text">Current Temperature: <i>Click Thermometer</i></string>
 </resources>
