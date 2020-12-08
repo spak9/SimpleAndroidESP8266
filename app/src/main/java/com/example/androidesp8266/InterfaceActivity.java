@@ -47,6 +47,7 @@ public class InterfaceActivity extends AppCompatActivity {
     String BaseUrl = "http://192.168.86.22/";
 
     boolean on = MainActivity.on;
+    String temp = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +112,7 @@ public class InterfaceActivity extends AppCompatActivity {
 
 
                         Toast.makeText(InterfaceActivity.this, response.toString(), Toast.LENGTH_LONG).show();
+                        temp = response.toString();
                         thermometer_text.setText("Current Temperature: " + response + "\u2109");
                         int color = ContextCompat.getColor(InterfaceActivity.this, R.color.red);
                         thermometer.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
@@ -146,6 +148,34 @@ public class InterfaceActivity extends AppCompatActivity {
         }
     }
 
+    /*
+    Overriding onSaveInstanceState() to make sure config changes don't mess
+    with the current state of temperature and leds
+     */
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // save our current state of leds & temp
+        savedInstanceState.putBoolean("leds", on);
+        savedInstanceState.putString("temperature", temp);
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        on = savedInstanceState.getBoolean("leds");
+        temp = savedInstanceState.getString("temperature");
+
+        // if temp has an actual string value, therefore has been
+        // clicked at least once
+        if (temp != null) {
+            thermometer_text.setText("Current Temperature: " + temp + "\u2109");
+            int color = ContextCompat.getColor(InterfaceActivity.this, R.color.red);
+            thermometer.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
+    }
     /*
         This method will take the state of the LEDs and make a HTTP POST
         request, requesting to do `!ON`
