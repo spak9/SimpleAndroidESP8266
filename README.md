@@ -1,9 +1,5 @@
 # Simple Android Application Using ESP8266
 
-## Work Flow
-The general work flow is just always to checkout a new branch and work on that 
-until it's merged with master. 
-That is, checkout, work on branch, commit, push, and finally pull request when all done.
 
 ## General Interface
 
@@ -26,3 +22,11 @@ LED interface will work
     that is, click on the `houseInterface` button. We synchronize 
     this by sending a small HTTP request right when `MainActivity`
     goes through `onResume()` getting the status of the LEDs.
+    
+## Temperature Interface
+
+-   This interface was quite simple. Similar to LEDs, the Android 
+    device will send a small HTTP GET request to the ESP8266, respond
+    with the temperature in fahrenheit as a string, do what we will on the
+    Android side with it.
+- 12/7: Sometimes, there seems to be some integer overflow 
